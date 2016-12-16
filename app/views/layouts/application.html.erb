@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Workspace</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+
+<div class="table-title">
+    <h3>Detector de Ironia</h3>
+  </div>
+  <div class="titulo">
+    <h2>Busca por frase</h2>
+    <hr align="center" width="600" size="1" color=white>
+  </div>
+  <div class="analisa-frase">
+    <form>
+  		<label>Digite a frase desejada:</label><br>
+  		<input id="frase" name="Frase" type="text" size="50">&nbsp;
+  		<input class="buscar" name="Buscar" type="submit" id="submit_frase" value="BUSCAR">
+  	</form>  
+  </div>
+  <div class="titulo">
+    <h2>Busca base por # e palavra chave</h2>
+    <hr align="center" width="600" size="1" color=white>
+  </div>
+
+  <%= yield %>
+</body>
+</html>
