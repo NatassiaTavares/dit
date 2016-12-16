@@ -7,14 +7,36 @@ class TweetsController < ApplicationController
   #require 'sentimental'
 
   def index
-    readTweets()
+    #readTweets()
     #search_tweets(SearchTweet, "love #sarcasm")
     #@tweetsSearch = SearchTweet.all
     @tweets = Tweet.all
-    positives()
+    #positives()
     @positives = Positive.all
-    detectSarcasm(Tweet, @tweets, @positives)
-    savetoCSV(@tweets)
+    #detectSarcasm(Tweet, @tweets, @positives)
+    #savetoCSV(@tweets)
+    @tweets = Tweet.all
+  end
+  
+  def show
+    
+  end
+  
+  def search
+    byebug
+    if params[:text].nil?
+      redirect_to root_path, notice: "Text can't be blank!"
+    else
+      logger.debug "aqui"
+      search_tweets(SearchTweet, params[:text])
+      @tweetsSearch = SearchTweet.all
+      @positives = Positive.all
+      detectSarcasm(SearchTweet, @tweetsSearch, @positives)
+
+    end
+  end
+  
+  def view
     @tweets = Tweet.all
   end
   
@@ -125,9 +147,9 @@ def search
     end
 
     results = client.search("#{text} -rt", lang: "en", count: 1000)
-  
+    byebug
     results.to_h[:statuses].each { |t|
-      already_created = Tweet.where(:origin_id => t[:id]).first
+      already_created = base.where(:origin_id => t[:id]).first
       if t[:text].include? "http" or t[:text].include? "www"  or t[:text].include? "@" or t[:text].include? "https"
         next
       end

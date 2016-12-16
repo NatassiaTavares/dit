@@ -8,6 +8,10 @@ Rails.application.routes.draw do
   #root 'welcome#index'
   resources :tweets
   root 'tweets#index'
+  post 'tweets/search' => 'tweets#search'
+  post 'tweets/view' => 'tweets#view'
+
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

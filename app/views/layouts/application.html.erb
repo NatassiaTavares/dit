@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Workspace</title>
+  <title>DIT</title>
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
@@ -19,7 +19,9 @@
   <div class="analisa-frase">
     <form>
   		<label>Digite a frase desejada:</label><br>
-  		<input id="frase" name="Frase" type="text" size="50">&nbsp;
+  		<%= form_tag :action => "search", :id => @some_object %>
+  		<%= label_tag(:text, "") %>
+      <%= text_field_tag(:text, nil,{:class => "validate", :required=>"required"}) %>
   		<input class="buscar" name="Buscar" type="submit" id="submit_frase" value="BUSCAR">
   	</form>  
   </div>
@@ -27,7 +29,11 @@
     <h2>Busca base por # e palavra chave</h2>
     <hr align="center" width="600" size="1" color=white>
   </div>
-
+  <div class="titulo">
+    <%= form_tag :action => "view", :id => @some_object %>
+    <input class="buscar" name="Visualizar Tabela" type="submit" id="ver_tabela" value="VER">
+  </div>
+  
   <%= yield %>
 </body>
 </html>
