@@ -17,13 +17,12 @@
     <hr align="center" width="600" size="1" color=white>
   </div>
   <div class="analisa-frase">
-    <form>
+    <%= form_tag :action => "search", controller: "tweets", :id => @some_object do %>
   		<label>Digite a frase desejada:</label><br>
-  		<%= form_tag :action => "search", :id => @some_object %>
   		<%= label_tag(:text, "") %>
       <%= text_field_tag(:text, nil,{:class => "validate", :required=>"required"}) %>
   		<input class="buscar" name="Buscar" type="submit" id="submit_frase" value="BUSCAR">
-  	</form>  
+    <% end %>
   </div>
   <div class="titulo">
     <h2>Busca base por # e palavra chave</h2>

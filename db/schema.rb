@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161216114749) do
+ActiveRecord::Schema.define(version: 20161219223457) do
 
   create_table "positives", force: :cascade do |t|
     t.string   "expression"
@@ -19,11 +19,20 @@ ActiveRecord::Schema.define(version: 20161216114749) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "searches", force: :cascade do |t|
+    t.string   "text",       limit: 140
+    t.string   "ironic"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.string   "origin_id"
+  end
+
   create_table "searchtweets", force: :cascade do |t|
     t.string   "text",       limit: 140
     t.string   "ironic"
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
+    t.string   "origin_id"
   end
 
   create_table "tweets", force: :cascade do |t|
