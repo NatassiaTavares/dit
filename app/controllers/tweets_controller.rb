@@ -7,20 +7,26 @@ class TweetsController < ApplicationController
   #require 'sentimental'
 
   def index
+    initiate()
+  end
+
+
+  def initiate
     readTweets()
-    #search_tweets(SearchTweet, "love #sarcasm")
-    #@tweetsSearch = SearchTweet.all
-    @tweets = Tweet.all
-    #positives()
+    @sarcastic = Sarcastic.all
+    @nonSarcastic = Nonsarcastic.all
+    positives()
     @positives = Positive.all
     @searchTweets = Searchtweet.all
-    #detectSarcasm(Tweet, @tweets, @positives)
+    detectSarcasm(Sarcastic, @sarcastic, @positives)
+    detectSarcasm(Nonsarcastic, @nonSarcastic, @positives)
+
     #savetoCSV(@tweets)
     @tweets = Tweet.all
   end
-
+  
   def search
-    
+    Searchtweet.destroy_all
     if params[:text].nil?
       redirect_to root_path, notice: "Text can't be blank!"
     else
@@ -33,16 +39,42 @@ class TweetsController < ApplicationController
     end
   end
   
-  def view
-    @tweets = Tweet.all
+  def analisar
+    byebug
+   if params[:text].nil?
+    redirect_to root_path, notice: "Text can't be blank!"
+    else
+       #@positives = Positive.all
+      @ironic = detectSarcasmSentence(:text.to_s, Positive.all)
+    end
+  end
+  
+  def viewSarcastic
+    
+    @tweets = Sarcastic.all
+  end
+
+  def viewNonSarcastic
+    
+    @tweetsNS = Nonsarcastic.all
   end
   
   def readTweets
     require 'csv'
     i = 0
-    CSV.foreach("app/controllers/naosarcastica.csv") do |row|
+    CSV.foreach("app/controllers/sarcastica.csv") do |row|
 
-      t = Tweet.new()
+      t = Sarcastic.new()
+      t.text = row[0].to_s
+      t.ironic = "no"
+      t.save
+      
+      i = i + 1
+    end
+    
+     CSV.foreach("app/controllers/naosarcastica.csv") do |row|
+
+      t = Nonsarcastic.new()
       t.text = row[0].to_s
       t.ironic = "no"
       t.save
@@ -77,11 +109,12 @@ end
   
   def detectSarcasm(base, tweets, positives)
     require 'longtextanalyzer'
-    tweets = Tweet.select(Arel.star).joins(
-        Tweet.arel_table.join(Positive.arel_table).on(
+    #byebug
+    tweets = base.select(Arel.star).joins(
+        base.arel_table.join(Positive.arel_table).on(
           Arel::Nodes::NamedFunction.new(
             'INSTR', [
-              Tweet.arel_table[:text], Positive.arel_table[:expression]
+              base.arel_table[:text], Positive.arel_table[:expression]
             ]
           ).gt(0)
         ).join_sources
@@ -122,8 +155,50 @@ end
     end
     
     base.where(:text =>arr).update_all(:ironic => "yes")
-    #logger.debug arr
+    logger.debug arr
     
+  end
+  
+  
+  def detectSarcasmSentence(text, positives)
+    require 'longtextanalyzer'
+    # Carregando os valores padrão da base SentiWordNet
+    LongTextAnalyzer.load_defaults
+    # Instanciando um analizador do SentiWordNet
+    analyzer = LongTextAnalyzer.new
+    
+    arr = Array.new
+    #sarcastics = negTweets & posTweets
+    
+    #Tweet.update(sarcastics, :ironic => 'yes')
+    irony = "no"
+    positives.each do |n|
+      e = n.expression
+        text.sub! '#sarcasm', ''
+        index = text.index(e)
+        if index.nil?
+          next
+        end
+        aux = text[(index+e.length)..-1]
+        #logger.debug aux
+        if not aux.nil?
+          score = analyzer.get_score(aux)
+          #logger.debug score
+          if not score.nil?
+            if score < 0
+              arr.push(text)
+              irony = "yes"
+              #logger.debug "IRONY"
+            end
+          end
+        end
+      
+    end
+    tweet = Tweet.new()
+    tweet.text = text
+    tweet.ironic = irony
+    tweet.save
+    irony
   end
   
   def search_tweets(base, text)

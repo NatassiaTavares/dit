@@ -9,8 +9,9 @@ Rails.application.routes.draw do
   resources :tweets
   root 'tweets#index'
   post 'tweets/search' => 'tweets#search'
-  post 'tweets/view' => 'tweets#view'
-
+  post 'tweets/viewSarcastic' => 'tweets#viewSarcastic'
+  post 'tweets/viewNonSarcastic' => 'tweets#viewNonSarcastic'
+  post 'tweets/analisar' => 'tweets#analisar'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

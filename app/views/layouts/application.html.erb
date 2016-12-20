@@ -8,7 +8,6 @@
 </head>
 <body>
 
-
 <div class="table-title">
     <h3>Detector de Ironia</h3>
   </div>
@@ -23,14 +22,24 @@
       <%= text_field_tag(:text, nil,{:class => "validate", :required=>"required"}) %>
   		<input class="buscar" name="Buscar" type="submit" id="submit_frase" value="BUSCAR">
     <% end %>
+    <%= form_tag :action => "analisar", controller: "tweets", :id => @some_object do %>
+  		<label>Digite a frase desejada:</label><br>
+  		<%= label_tag(:text, "") %>
+      <%= text_field_tag(:text, nil,{:class => "validate", :required=>"required"}) %>
+  		<input class="buscar" name="Buscar" type="submit" id="submit_frase" value="ANALISAR">
+    <% end %>
   </div>
   <div class="titulo">
     <h2>Busca base por # e palavra chave</h2>
     <hr align="center" width="600" size="1" color=white>
   </div>
   <div class="titulo">
-    <%= form_tag :action => "view", :id => @some_object %>
-    <input class="buscar" name="Visualizar Tabela" type="submit" id="ver_tabela" value="VER">
+    <%= form_tag :action => "viewSarcastic", :id => @some_object do%>
+    <input class="buscar" name="Visualizar Tabela" type="submit" id="ver_tabela" value="VER TABELA DE TREINAMENTO SARCÁSTICOS">
+     <% end %>
+    <%= form_tag :action => "viewNonSarcastic", :id => @some_object do%>
+    <input class="buscar" name="Visualizar Tabela" type="submit" id="ver_tabela" value="VER TABELA DE TREINAMENTO NÃO SARCÁSTICOS">
+     <% end %>
   </div>
   
   <%= yield %>
