@@ -40,12 +40,12 @@ class TweetsController < ApplicationController
   end
   
   def analisar
-    byebug
+    
    if params[:text].nil?
     redirect_to root_path, notice: "Text can't be blank!"
     else
        #@positives = Positive.all
-      @ironic = detectSarcasmSentence(:text.to_s, Positive.all)
+      @ironic = detectSarcasmSentence(params[:text], Positive.all)
     end
   end
   
@@ -171,9 +171,12 @@ end
     #sarcastics = negTweets & posTweets
     
     #Tweet.update(sarcastics, :ironic => 'yes')
+    positives = ["love", "enjoy", "adore"]
     irony = "no"
+    byebug
     positives.each do |n|
-      e = n.expression
+      
+      e = n
         text.sub! '#sarcasm', ''
         index = text.index(e)
         if index.nil?
@@ -188,6 +191,8 @@ end
             if score < 0
               arr.push(text)
               irony = "yes"
+              byebug
+              break
               #logger.debug "IRONY"
             end
           end
